@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "При использовании кода укажите эту работу; библиографические данные обновятся после публикации сборника."
+title: "GRAIL: Compact Multimodal Similarities for Astronomy Citation Linking"
+authors:
+  - family-names: Fedosov
+    given-names: Egor
+    affiliation: Ural Federal University
+type: software
+repository-code: "https://github.com/denzasikora-lab/astroclimb-grail"
+license: MIT
+date-released: 2026-10-08

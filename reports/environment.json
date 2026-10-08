@@ -1,0 +1,27 @@
+{
+  "python": "3.14.3",
+  "numpy": "2.4.3",
+  "pandas": "2.3.3",
+  "scikit-learn": "1.9.0",
+  "scipy": "1.18.0",
+  "pyarrow": "23.0.1",
+  "threadpoolctl": "3.6.0",
+  "thread_limit": 2,
+  "hgb_common": {
+    "learning_rate": 0.055,
+    "min_samples_leaf": 35,
+    "early_stopping": false,
+    "random_state": 20260919,
+    "class_weight": null
+  },
+  "features": {
+    "count": 190,
+    "max_features_per_tfidf_vectorizer": 40000,
+    "max_text_chars": 4000,
+    "transform_batch_size": 512,
+    "spaces": ["clip_b16", "clip_b32", "scincl", "layout"]
+  },
+  "new_encoder_weights_downloaded": false,
+  "metadata_read_from": "/Users/adam/Documents/dev/projects/AstroCLIMB-kaggle/artifacts/audit",
+  "test_labels_read": false
+}

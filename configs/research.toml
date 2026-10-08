@@ -1,0 +1,24 @@
+[data]
+image_prefix = "iVBORw0KGgo"
+image_side = 384
+minimum_free_gib = 8
+
+[validation]
+n_splits = 5
+random_seed = 20260919
+group_by_object_component = true
+
+[encoders]
+joint_fast = "openai/clip-vit-base-patch32"
+joint_primary = "google/siglip2-base-patch16-naflex"
+text = "malteos/scincl"
+vision_fast = "facebook/dinov2-small"
+vision_primary = "facebook/dinov2-base"
+
+[model]
+experts = ["image+text", "text+text", "image+image"]
+factorized_head = true
+symmetry_tta = true
+optimize_macro_f1_offsets = true
+primary_estimator = "catboost"
+fallback_estimator = "logistic"

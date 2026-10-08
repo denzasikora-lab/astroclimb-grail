@@ -1,0 +1,721 @@
+{
+  "protocol": {
+    "outer_folds": 5,
+    "inner_folds": 3,
+    "models": {
+      "hgb7": {
+        "leaves": 7,
+        "iterations": 180,
+        "l2": 10.0,
+        "factorized": false
+      },
+      "hgb15": {
+        "leaves": 15,
+        "iterations": 180,
+        "l2": 15.0,
+        "factorized": false
+      },
+      "factorized7": {
+        "leaves": 7,
+        "iterations": 180,
+        "l2": 10.0,
+        "factorized": true
+      }
+    },
+    "selection": "inner OOF feasible-class macro-F1 per modality",
+    "calibration": "class offsets fitted only to selected inner OOF predictions",
+    "test_prediction": "mean of five outer models with their inner-selected offsets",
+    "idf_and_embedding_statistics": "fitted exclusively on each fitting fold's objects",
+    "solution_csv_read": false,
+    "test_labels_read": false,
+    "interpretation": "development validation with nested selection; dataset was used in earlier research"
+  },
+  "validation_checks": [
+    {
+      "fold": 0,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 1,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 2,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 3,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 4,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    }
+  ],
+  "folds": [
+    {
+      "fold": 0,
+      "choices": {
+        "image+text": "factorized7",
+        "text+text": "factorized7",
+        "image+image": "factorized7"
+      },
+      "inner_scores": {
+        "image+text": {
+          "hgb7": 0.34667585582647475,
+          "hgb15": 0.34141008004617196,
+          "factorized7": 0.3535033948760903
+        },
+        "text+text": {
+          "hgb7": 0.6129539752957988,
+          "hgb15": 0.6216481323939762,
+          "factorized7": 0.6336152194002159
+        },
+        "image+image": {
+          "hgb7": 0.44494014453865777,
+          "hgb15": 0.4354475098091804,
+          "factorized7": 0.4454876466107242
+        }
+      },
+      "offsets": {
+        "same_figure": 0.44999999999999996,
+        "same_paper": -0.25,
+        "related_papers": 0.0,
+        "unrelated_papers": -0.15000000000000002
+      },
+      "inner_disjoint_checks": [
+        {
+          "fold": 0,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 1,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 2,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 266,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        }
+      ],
+      "macro_f1": 0.4824076570613729,
+      "fixed_macro_f1": {
+        "hgb7": 0.4612923821712266,
+        "hgb15": 0.46607750349934485,
+        "factorized7": 0.47754553918474363
+      },
+      "elapsed_seconds": 130.50451391702518
+    },
+    {
+      "fold": 1,
+      "choices": {
+        "image+text": "factorized7",
+        "text+text": "hgb7",
+        "image+image": "factorized7"
+      },
+      "inner_scores": {
+        "image+text": {
+          "hgb7": 0.3609697266107744,
+          "hgb15": 0.3605790999879236,
+          "factorized7": 0.3617084823780434
+        },
+        "text+text": {
+          "hgb7": 0.6244905411572078,
+          "hgb15": 0.6213357719075895,
+          "factorized7": 0.6178097978629216
+        },
+        "image+image": {
+          "hgb7": 0.43178895322092137,
+          "hgb15": 0.43480704176505264,
+          "factorized7": 0.442189151915837
+        }
+      },
+      "offsets": {
+        "same_figure": 0.3500000000000001,
+        "same_paper": -0.19999999999999996,
+        "related_papers": 0.0,
+        "unrelated_papers": -0.050000000000000044
+      },
+      "inner_disjoint_checks": [
+        {
+          "fold": 0,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 1,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 2,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 266,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        }
+      ],
+      "macro_f1": 0.48295313916889293,
+      "fixed_macro_f1": {
+        "hgb7": 0.4813849327337167,
+        "hgb15": 0.47851945920196615,
+        "factorized7": 0.48933435349915
+      },
+      "elapsed_seconds": 116.90849645901471
+    },
+    {
+      "fold": 2,
+      "choices": {
+        "image+text": "hgb15",
+        "text+text": "factorized7",
+        "image+image": "hgb7"
+      },
+      "inner_scores": {
+        "image+text": {
+          "hgb7": 0.3492812573609777,
+          "hgb15": 0.3599690307736979,
+          "factorized7": 0.3537490474848937
+        },
+        "text+text": {
+          "hgb7": 0.6203654736140073,
+          "hgb15": 0.6170765992352786,
+          "factorized7": 0.6212605090895466
+        },
+        "image+image": {
+          "hgb7": 0.455642149319991,
+          "hgb15": 0.45405236484396694,
+          "factorized7": 0.44913922424496144
+        }
+      },
+      "offsets": {
+        "same_figure": 0.6000000000000001,
+        "same_paper": -0.050000000000000044,
+        "related_papers": 0.09999999999999998,
+        "unrelated_papers": 0.0
+      },
+      "inner_disjoint_checks": [
+        {
+          "fold": 0,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 1,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 2,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 266,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        }
+      ],
+      "macro_f1": 0.47162521482431086,
+      "fixed_macro_f1": {
+        "hgb7": 0.464505537916469,
+        "hgb15": 0.4702012707724529,
+        "factorized7": 0.4810567867302733
+      },
+      "elapsed_seconds": 139.34795820899308
+    },
+    {
+      "fold": 3,
+      "choices": {
+        "image+text": "hgb15",
+        "text+text": "factorized7",
+        "image+image": "factorized7"
+      },
+      "inner_scores": {
+        "image+text": {
+          "hgb7": 0.35866001120040314,
+          "hgb15": 0.3604258636642204,
+          "factorized7": 0.35591679693472655
+        },
+        "text+text": {
+          "hgb7": 0.6195516140037249,
+          "hgb15": 0.6161276371756028,
+          "factorized7": 0.6269339911348638
+        },
+        "image+image": {
+          "hgb7": 0.4316706712491256,
+          "hgb15": 0.43044753834947874,
+          "factorized7": 0.4400347889607836
+        }
+      },
+      "offsets": {
+        "same_figure": 0.0,
+        "same_paper": -0.35000000000000003,
+        "related_papers": 0.0,
+        "unrelated_papers": 0.0
+      },
+      "inner_disjoint_checks": [
+        {
+          "fold": 0,
+          "train_rows": 5332,
+          "valid_rows": 2668,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 801,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 1,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 266,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 2,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 799,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        }
+      ],
+      "macro_f1": 0.4513446848924756,
+      "fixed_macro_f1": {
+        "hgb7": 0.4526159462673164,
+        "hgb15": 0.44637283110258025,
+        "factorized7": 0.45693757214977926
+      },
+      "elapsed_seconds": 142.36156091699377
+    },
+    {
+      "fold": 4,
+      "choices": {
+        "image+text": "hgb15",
+        "text+text": "factorized7",
+        "image+image": "hgb7"
+      },
+      "inner_scores": {
+        "image+text": {
+          "hgb7": 0.3555320090936046,
+          "hgb15": 0.35623812183956804,
+          "factorized7": 0.35137596306793445
+        },
+        "text+text": {
+          "hgb7": 0.6123763802097186,
+          "hgb15": 0.6057323925368623,
+          "factorized7": 0.6235552369826501
+        },
+        "image+image": {
+          "hgb7": 0.453080189389438,
+          "hgb15": 0.44597746170351255,
+          "factorized7": 0.4515651105535341
+        }
+      },
+      "offsets": {
+        "same_figure": 0.3500000000000001,
+        "same_paper": -0.15000000000000002,
+        "related_papers": 0.050000000000000044,
+        "unrelated_papers": 0.0
+      },
+      "inner_disjoint_checks": [
+        {
+          "fold": 0,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 1,
+          "train_rows": 5334,
+          "valid_rows": 2666,
+          "valid_label_counts": {
+            "same_figure": 266,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        },
+        {
+          "fold": 2,
+          "train_rows": 5333,
+          "valid_rows": 2667,
+          "valid_label_counts": {
+            "same_figure": 267,
+            "same_paper": 800,
+            "related_papers": 800,
+            "unrelated_papers": 800
+          },
+          "object_overlap": 0
+        }
+      ],
+      "macro_f1": 0.49172375897583775,
+      "fixed_macro_f1": {
+        "hgb7": 0.47729242351809176,
+        "hgb15": 0.47341937357554775,
+        "factorized7": 0.4955013280326838
+      },
+      "elapsed_seconds": 112.10465329210274
+    }
+  ],
+  "macro_f1_nested": 0.47692374729392195,
+  "fixed_raw_macro_f1": {
+    "hgb7": 0.46752897997625065,
+    "hgb15": 0.46706800938079707,
+    "factorized7": 0.480180699964353
+  },
+  "macro_f1_group_bootstrap_95ci": {
+    "point": 0.47692374729392195,
+    "lower": 0.46753224175177643,
+    "upper": 0.48742658166258995
+  },
+  "classification_report": {
+    "same_figure": {
+      "precision": 0.41509433962264153,
+      "recall": 0.704,
+      "f1-score": 0.5222551928783383,
+      "support": 1000.0
+    },
+    "same_paper": {
+      "precision": 0.6018886679920478,
+      "recall": 0.4036666666666667,
+      "f1-score": 0.48324022346368717,
+      "support": 3000.0
+    },
+    "related_papers": {
+      "precision": 0.38799463447350774,
+      "recall": 0.38566666666666666,
+      "f1-score": 0.38682714811099966,
+      "support": 3000.0
+    },
+    "unrelated_papers": {
+      "precision": 0.49123867069486404,
+      "recall": 0.542,
+      "f1-score": 0.5153724247226624,
+      "support": 3000.0
+    },
+    "accuracy": 0.4698,
+    "macro avg": {
+      "precision": 0.4740540781957653,
+      "recall": 0.5088333333333332,
+      "f1-score": 0.47692374729392195,
+      "support": 10000.0
+    },
+    "weighted avg": {
+      "precision": 0.48584602591039,
+      "recall": 0.4698,
+      "f1-score": 0.46785745817703867,
+      "support": 10000.0
+    }
+  },
+  "feature_names": [
+    "pair.image_image",
+    "pair.image_text",
+    "pair.text_text",
+    "text.nonempty_sides",
+    "text.length_log_min",
+    "text.length_log_max",
+    "text.length_ratio",
+    "text.token_log_min",
+    "text.token_log_max",
+    "text.exact",
+    "text.normalized_exact",
+    "text.substring",
+    "text.token_jaccard",
+    "text.token_containment_min",
+    "text.token_containment_max",
+    "text.token_shared_log",
+    "text.informative_jaccard",
+    "text.informative_containment_min",
+    "text.informative_containment_max",
+    "text.informative_shared_log",
+    "text.number_jaccard",
+    "text.number_containment_min",
+    "text.number_containment_max",
+    "text.number_shared_log",
+    "text.acronym_jaccard",
+    "text.acronym_containment_min",
+    "text.acronym_containment_max",
+    "text.acronym_shared_log",
+    "text.identifier_jaccard",
+    "text.identifier_containment_min",
+    "text.identifier_containment_max",
+    "text.identifier_shared_log",
+    "text.idf_jaccard",
+    "text.idf_containment_min",
+    "text.idf_containment_max",
+    "text.idf_shared_max",
+    "text.idf_shared_mean",
+    "tfidf.word_cosine",
+    "tfidf.word_weighted_jaccard",
+    "tfidf.word_containment_min",
+    "tfidf.word_containment_max",
+    "tfidf.word_nnz_log_min",
+    "tfidf.word_nnz_log_max",
+    "tfidf.word_nonempty_sides",
+    "tfidf.char_cosine",
+    "tfidf.char_weighted_jaccard",
+    "tfidf.char_containment_min",
+    "tfidf.char_containment_max",
+    "tfidf.char_nnz_log_min",
+    "tfidf.char_nnz_log_max",
+    "tfidf.char_nonempty_sides",
+    "raw.length_log_min",
+    "raw.length_log_max",
+    "raw.length_ratio",
+    "raw.image_length_log_mean",
+    "raw.text_length_log_mean",
+    "emb.clip_b16_available_sides",
+    "emb.clip_b16_cosine",
+    "emb.clip_b16_unit_l1_mean",
+    "emb.clip_b16_unit_l2",
+    "emb.clip_b16_unit_linf",
+    "emb.clip_b16_unit_abs_q25",
+    "emb.clip_b16_unit_abs_q50",
+    "emb.clip_b16_unit_abs_q75",
+    "emb.clip_b16_unit_abs_q90",
+    "emb.clip_b16_product_std",
+    "emb.clip_b16_product_min",
+    "emb.clip_b16_product_max",
+    "emb.clip_b16_sign_agreement",
+    "emb.clip_b16_centered_cosine",
+    "emb.clip_b16_whitened_cosine",
+    "emb.clip_b16_norm_log_min",
+    "emb.clip_b16_norm_log_max",
+    "emb.clip_b32_available_sides",
+    "emb.clip_b32_cosine",
+    "emb.clip_b32_unit_l1_mean",
+    "emb.clip_b32_unit_l2",
+    "emb.clip_b32_unit_linf",
+    "emb.clip_b32_unit_abs_q25",
+    "emb.clip_b32_unit_abs_q50",
+    "emb.clip_b32_unit_abs_q75",
+    "emb.clip_b32_unit_abs_q90",
+    "emb.clip_b32_product_std",
+    "emb.clip_b32_product_min",
+    "emb.clip_b32_product_max",
+    "emb.clip_b32_sign_agreement",
+    "emb.clip_b32_centered_cosine",
+    "emb.clip_b32_whitened_cosine",
+    "emb.clip_b32_norm_log_min",
+    "emb.clip_b32_norm_log_max",
+    "emb.scincl_available_sides",
+    "emb.scincl_cosine",
+    "emb.scincl_unit_l1_mean",
+    "emb.scincl_unit_l2",
+    "emb.scincl_unit_linf",
+    "emb.scincl_unit_abs_q25",
+    "emb.scincl_unit_abs_q50",
+    "emb.scincl_unit_abs_q75",
+    "emb.scincl_unit_abs_q90",
+    "emb.scincl_product_std",
+    "emb.scincl_product_min",
+    "emb.scincl_product_max",
+    "emb.scincl_sign_agreement",
+    "emb.scincl_centered_cosine",
+    "emb.scincl_whitened_cosine",
+    "emb.scincl_norm_log_min",
+    "emb.scincl_norm_log_max",
+    "emb.layout_available_sides",
+    "emb.layout_cosine",
+    "emb.layout_unit_l1_mean",
+    "emb.layout_unit_l2",
+    "emb.layout_unit_linf",
+    "emb.layout_unit_abs_q25",
+    "emb.layout_unit_abs_q50",
+    "emb.layout_unit_abs_q75",
+    "emb.layout_unit_abs_q90",
+    "emb.layout_product_std",
+    "emb.layout_product_min",
+    "emb.layout_product_max",
+    "emb.layout_sign_agreement",
+    "emb.layout_centered_cosine",
+    "emb.layout_whitened_cosine",
+    "emb.layout_norm_log_min",
+    "emb.layout_norm_log_max",
+    "layout.absdiff_0",
+    "layout.absdiff_1",
+    "layout.absdiff_2",
+    "layout.absdiff_3",
+    "layout.absdiff_4",
+    "layout.absdiff_5",
+    "layout.absdiff_6",
+    "layout.absdiff_7",
+    "layout.absdiff_8",
+    "layout.absdiff_9",
+    "layout.absdiff_10",
+    "layout.absdiff_11",
+    "layout.absdiff_12",
+    "layout.absdiff_13",
+    "layout.absdiff_14",
+    "layout.absdiff_15",
+    "layout.absdiff_16",
+    "layout.absdiff_17",
+    "layout.absdiff_18",
+    "layout.absdiff_19",
+    "layout.absdiff_20",
+    "layout.absdiff_21",
+    "layout.absdiff_22",
+    "layout.absdiff_23",
+    "layout.absdiff_24",
+    "layout.absdiff_25",
+    "layout.absdiff_26",
+    "layout.absdiff_27",
+    "layout.absdiff_28",
+    "layout.absdiff_29",
+    "layout.absdiff_30",
+    "layout.absdiff_31",
+    "layout.absdiff_32",
+    "layout.mean_0",
+    "layout.mean_1",
+    "layout.mean_2",
+    "layout.mean_3",
+    "layout.mean_4",
+    "layout.mean_5",
+    "layout.mean_6",
+    "layout.mean_7",
+    "layout.mean_8",
+    "layout.mean_9",
+    "layout.mean_10",
+    "layout.mean_11",
+    "layout.mean_12",
+    "layout.mean_13",
+    "layout.mean_14",
+    "layout.mean_15",
+    "layout.mean_16",
+    "layout.mean_17",
+    "layout.mean_18",
+    "layout.mean_19",
+    "layout.mean_20",
+    "layout.mean_21",
+    "layout.mean_22",
+    "layout.mean_23",
+    "layout.mean_24",
+    "layout.mean_25",
+    "layout.mean_26",
+    "layout.mean_27",
+    "layout.mean_28",
+    "layout.mean_29",
+    "layout.mean_30",
+    "layout.mean_31",
+    "layout.mean_32"
+  ],
+  "elapsed_seconds": 658.9331203750335,
+  "submission_sha256": "8c174b462033e90fc2e84c57d4f3d962094b8105824c1a435311cbbbac6f1b6c"
+}
