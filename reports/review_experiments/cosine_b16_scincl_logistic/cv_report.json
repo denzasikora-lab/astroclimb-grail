@@ -154,11 +154,11 @@
     }
   ],
   "input_fingerprint": "7a3bf70ed79ed516f7beee054d2fc7ada5fc4a85f9209610bcde6a1f4add5685",
-  "corpus_statistics": "Только уникальные объекты обучающей части каждого разбиения",
+  "corpus_statistics": "Unique objects from the fitting partition of each fold only",
   "decision_offsets": false,
   "model_selection": false,
   "test_data_read": false,
-  "interpretation": "Оценка разработки после предшествующих экспериментов на том же наборе",
+  "interpretation": "Development estimate after prior experiments on the same dataset",
   "elapsed_total_seconds": 59.48397049983032,
   "included_pair_types": [
     "image+text",

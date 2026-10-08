@@ -1,43 +1,43 @@
-# GRAIL для AstroCLIMB
+# GRAIL for AstroCLIMB
 
-Реализация системы из статьи *GRAIL: Compact Multimodal Similarities for Astronomy Citation Linking*, принятой в трек AstroCLIMB на WASP 2026. Автор статьи: Egor Fedosov, Ural Federal University.
+Implementation of *GRAIL: Compact Multimodal Similarities for Astronomy Citation Linking*, accepted in the AstroCLIMB shared-task track at WASP 2026. Paper author: Egor Fedosov, Ural Federal University.
 
-Система классифицирует пары изображений и подписей по четырем отношениям: `same_figure`, `same_paper`, `related_papers`, `unrelated_papers`. Основная модель использует 190 симметричных признаков из замороженных CLIP ViT-B/16, CLIP ViT-B/32, SciNCL, OCR, лексических совпадений и геометрии изображений. Классификаторы обучаются отдельно для каждой модальности.
+The system classifies figure and caption pairs into four relations: `same_figure`, `same_paper`, `related_papers`, and `unrelated_papers`. The primary model uses 190 symmetric features from frozen CLIP ViT-B/16, CLIP ViT-B/32, SciNCL, OCR, lexical overlap, and image layout. Classifiers are fitted separately for each pair modality.
 
-## Подтвержденные результаты
+## Verified results
 
-| Вариант | Локальный macro-F1 | Kaggle |
+| System | Local macro-F1 | Kaggle |
 | --- | ---: | ---: |
-| Фиксированная факторизованная модель | 0.48018 | 0.48335 |
-| Вложенный выбор модели и поправок решений | 0.47692 | 0.48264 |
-| Фиксированная модель без OCR | 0.47212 | не измерялось |
-| Фиксированная модель без TF-IDF и редкости терминов | 0.46743 | не измерялось |
+| Fixed factorized model | 0.48018 | 0.48335 |
+| Nested model selection and decision offsets | 0.47692 | 0.48264 |
+| Fixed model without OCR | 0.47212 | Not evaluated |
+| Fixed model without TF-IDF and term rarity | 0.46743 | Not evaluated |
 
-Локальные оценки рассчитаны по пяти внешним разбиениям, разделяющим компоненты графа точных объектов. Это результаты разработки, а не независимый тест. Разделение по исходным научным статьям не гарантируется. Kaggle-оценки относятся к двум отправкам от 19 сентября 2026 года. Сравнения по замечаниям рецензентов выполнены отдельно 8 октября 2026 года и приведены ниже; исходные оценки отправленных систем сохранены.
+Local scores use five outer folds that separate connected components of exact objects. These are development results, not an independent test. Separation by source paper is not guaranteed. Kaggle scores refer to two submissions made on September 19, 2026. Reviewer-requested comparisons were run separately on October 8, 2026 and are reported below; the original submitted-system scores are preserved.
 
-### Выполненные cosine-сравнения и CLIP-абляции
+### Executed cosine comparisons and CLIP ablations
 
-| Вариант | Область | Macro-F1 |
+| System | Evaluation scope | Macro-F1 |
 | --- | --- | ---: |
-| CLIP B/16 cosine, логистические головы | 10 000 пар, 4 класса | 0.40436 |
-| CLIP B/32 cosine, логистические головы | 10 000 пар, 4 класса | 0.39016 |
-| SciNCL cosine, логистические головы | 3000 пар подписей, 3 класса | 0.50052 |
-| CLIP B/16 + SciNCL cosine, логистические головы | 10 000 пар, 4 класса | 0.42432 |
-| Два CLIP + SciNCL cosine, логистические головы | 10 000 пар, 4 класса | 0.42133 |
-| Два CLIP + SciNCL cosine, фиксированные boosted-головы | 10 000 пар, 4 класса | 0.41223 |
-| Полная модель, повтор с восстановленными представлениями | 10 000 пар, 4 класса | 0.48040 |
-| Полная модель без блока B/16 | 10 000 пар, 4 класса | 0.47077 |
-| Полная модель без блока B/32 | 10 000 пар, 4 класса | 0.47280 |
+| CLIP B/16 cosine, logistic heads | 10,000 pairs, 4 classes | 0.40436 |
+| CLIP B/32 cosine, logistic heads | 10,000 pairs, 4 classes | 0.39016 |
+| SciNCL cosine, logistic heads | 3,000 caption pairs, 3 classes | 0.50052 |
+| CLIP B/16 + SciNCL cosine, logistic heads | 10,000 pairs, 4 classes | 0.42432 |
+| Dual CLIP + SciNCL cosine, logistic heads | 10,000 pairs, 4 classes | 0.42133 |
+| Dual CLIP + SciNCL cosine, fixed boosted heads | 10,000 pairs, 4 classes | 0.41223 |
+| Full model, replay with regenerated representations | 10,000 pairs, 4 classes | 0.48040 |
+| Full model without the B/16 block | 10,000 pairs, 4 classes | 0.47077 |
+| Full model without the B/32 block | 10,000 pairs, 4 classes | 0.47280 |
 
-При одинаковом boosted-классификаторе полные 190 признаков дают абсолютный прирост 0.06817 относительно трех cosine-признаков. Удаление B/16 снижает оценку на 0.00963, удаление B/32 - на 0.00760. Все остальные признаки и настройки сохраняются, каждая CLIP-абляция использует 173 признака.
+With the same boosted classifier, the full 190 features improve macro-F1 by 0.06817 over the three cosine features. Removing B/16 decreases the score by 0.00963; removing B/32 decreases it by 0.00760. All other features and settings remain unchanged, and each CLIP ablation uses 173 features.
 
-Исходный train.csv полностью сверяется с сохраненными хешами, типами, длинами объектов и метками всех 10 000 пар. Используются прежние пять внешних разбиений; точные объекты обучения и проверки не пересекаются. Представления восстановлены по фиксированным версиям моделей, OCR повторно использован по хешам. Тестовые данные, поправки решений и выбор модели не используются.
+The source `train.csv` is checked against the saved object hashes, types, lengths, and labels of all 10,000 pairs. The original five outer folds are reused, with no exact-object overlap between fitting and validation partitions. Representations are regenerated from pinned model revisions, and saved OCR is reused by object hash. These comparisons use no scoring data, decision offsets, or model selection.
 
-Оценка повторной полной модели отличается от сохраненной исходной на 0.00022. Она служит контролем для новых сравнений и не заменяет результаты уже отправленной системы. Полные оценки, отчеты по разбиениям, происхождение представлений, контрольные суммы и OOF-предсказания находятся в [reports/review_experiments](reports/review_experiments).
+The replayed full-model score differs from the original saved score by 0.00022. It is the control for the new comparisons and does not replace the submitted-system results. Full-precision scores, fold reports, representation provenance, checksums, and out-of-fold (OOF) predictions are available in [reports/review_experiments](reports/review_experiments). Recorded execution-time code hashes are preserved even when documentation and messages are subsequently translated.
 
-## Установка
+## Installation
 
-Требуется Python 3.10 или новее. Версии библиотек исходного локального эксперимента сохранены в `reports/environment.json`.
+Python 3.10 or newer is required. Library versions from the original local experiment are recorded in `reports/environment.json`.
 
 ```bash
 python -m venv .venv
@@ -46,17 +46,17 @@ python -m pip install -e '.[ml,dev]'
 python -m pytest
 ```
 
-Все регрессионные проверки находятся в `tests/test_all_regressions.py`.
+All regression checks are in `tests/test_all_regressions.py`.
 
-## Данные
+## Data
 
-Данные получают отдельно со [страницы AstroCLIMB](https://www.kaggle.com/competitions/astroclimb). Положите разрешенные файлы `train.csv`, `test.csv` и `sample_submission.csv` в каталог `astroclimb/`. Исходные изображения, подписи, веса моделей и учетные данные в репозитории отсутствуют.
+Obtain the data separately from the [AstroCLIMB competition page](https://www.kaggle.com/competitions/astroclimb). Place the permitted `train.csv`, `test.csv`, and `sample_submission.csv` files in `astroclimb/` to reproduce the original submission pipeline. Raw images, captions, model weights, and credentials are not distributed in this repository.
 
-Файл `solution.csv` не используется: код запрещает его чтение. Идентификаторы пар и порядок строк не являются признаками. Словари, IDF и статистики эмбеддингов подгоняются только на объектах обучающей части каждого разбиения.
+The code rejects reads of `solution.csv`. Pair IDs and row order are not predictors. Vocabularies, IDF weights, and embedding statistics are fitted only on objects in the fitting partition of each fold.
 
-## Восстановление признаков и исходного эксперимента
+## Reproducing features and the original experiment
 
-Команды выполняются из корня репозитория.
+Run these commands from the repository root.
 
 ```bash
 export PYTHONPATH=src
@@ -69,7 +69,7 @@ python scripts/extract_embeddings.py --cache-dir artifacts/object_cache --output
 python scripts/extract_layout_descriptors.py --cache-dir artifacts/object_cache --output-dir artifacts/embeddings --name layout
 ```
 
-Для точного воспроизведения локального OCR нужен macOS Vision:
+Exact reproduction of the local OCR requires macOS Vision:
 
 ```bash
 swiftc -module-cache-path artifacts/swift_module_cache scripts/ocr_macos.swift -o artifacts/ocr_macos
@@ -77,23 +77,23 @@ artifacts/ocr_macos artifacts/object_cache/images artifacts/ocr_fast.jsonl 0 fas
 python scripts/train_rich_nested.py --project "$PWD" --output-dir artifacts/run_rich_nested --threads 2
 ```
 
-Для Linux предусмотрен `scripts/ocr_tesseract.py`. Замена движка OCR может изменить оценки; такой результат следует описывать как отдельный эксперимент.
+For Linux, use `scripts/ocr_tesseract.py`. Changing the OCR engine may change the scores and should be reported as a separate experiment.
 
-## Эксперименты по замечаниям рецензентов
+## Reviewer-requested experiments
 
 ```bash
 PYTHONPATH=src python scripts/review_experiments.py --project "$PWD" --output-dir artifacts/review_experiments --threads 2
 ```
 
-Скрипт сравнивает простые классификаторы над косинусными сходствами CLIP/SciNCL и факторизованную модель с теми же настройками, что в статье. Абляции финальной модели удаляют только блок B/16 или только блок B/32, сохраняя остальные признаки. Используются пять разбиений по компонентам объектов без поправок решений и выбора модели по проверочным меткам. SciNCL отдельно оценивается только на парах подписей, где он доступен; его трехклассовый результат нельзя напрямую сравнивать с общим четырехклассовым macro-F1.
+The script compares simple classifiers over CLIP/SciNCL cosine similarities with a factorized model using the paper's fixed settings. Final-model ablations remove only the B/16 or B/32 block while retaining the other features. All comparisons use five object-component folds, without decision offsets or model selection on validation labels. SciNCL alone is evaluated only on caption pairs, where its representation is available; this three-class score is not directly comparable to overall four-class macro-F1.
 
-Для сравнения OCR можно передать `--full-resolution-ocr путь/к/ocr.jsonl`: файл должен содержать распознавание исходных изображений тем же движком и с теми же настройками. Скрипт сравнит два OCR-варианта при одинаковых классификаторах и разбиениях. Для точного совпадения с сохраненным экспериментом используйте `--fold-ids artifacts/run_rich_nested/fold_ids.npy`.
+For an OCR-resolution comparison, pass `--full-resolution-ocr path/to/ocr.jsonl`. The file must contain OCR of the original images using the same engine and settings. The script compares the two OCR variants with identical classifiers and folds. No such resolution experiment is claimed in the saved results. To reproduce the saved experiment's folds exactly, use `--fold-ids artifacts/run_rich_nested/fold_ids.npy`.
 
-### Повторные сравнения без тестового набора
+### Repeating comparisons without scoring data
 
-Для этих сравнений достаточно `train.csv`, сохраненных обучающих метаданных, внешних разбиений и OCR. Полный архив соревнования, `test.csv` и `sample_submission.csv` не нужны. Подготовка читает CSV построчно, проверяет каждый объект по прежним хешам и создает только компактный кеш; исходный CSV не копируется. Параметр `--minimum-free-gib 6` сохраняет запас места на диске.
+These comparisons require only `train.csv`, saved training metadata, outer folds, and OCR. The full competition archive, `test.csv`, and `sample_submission.csv` are unnecessary. Preparation streams the CSV, checks every object against its saved hash, and creates only a compact cache without copying the raw CSV. The `--minimum-free-gib 6` setting enforces a free-disk-space reserve.
 
-В примере сохраненные метаданные, разбиения и OCR находятся в `saved/`. Каждый повтор запускайте в новом каталоге, поскольку завершенные кеши и отчеты защищены от перезаписи.
+In this example, saved metadata, folds, and OCR are in `saved/`. Use a new directory for each replay: completed caches and reports are protected against overwriting.
 
 ```bash
 review_root=artifacts/review_reproduction
@@ -107,19 +107,19 @@ PYTHONPATH=src python scripts/extract_layout_descriptors.py --cache-dir "$review
 PYTHONPATH=src python scripts/review_experiments.py --project "$review_root" --output-dir "$review_root/artifacts/review_experiments" --fold-ids "$review_root/artifacts/audit/fold_ids.npy" --ocr-jsonl saved/ocr_fast.jsonl --threads 2
 ```
 
-CLIP и SciNCL выполняются по очереди. При локально сохраненных весах можно отключить сеть переменными `HF_HUB_OFFLINE=1` и `TRANSFORMERS_OFFLINE=1`. Для отдельной полностью сохранившейся группы предусмотрен `--modalities` в подготовке; такой результат относится только к явно выбранным модальностям, а не ко всему набору.
+Run CLIP and SciNCL sequentially. With weights cached locally, set `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1` to disable network access. Preparation also supports `--modalities` for a complete saved subset; such results apply only to the selected modalities, not to the full dataset.
 
-## Структура
+## Repository structure
 
-- `src/astroclimb/`: обработка объектов, признаки, модели, разбиения и проверки входных данных.
-- `scripts/`: извлечение представлений, обучение и анализ результатов.
-- `tests/test_all_regressions.py`: единый набор регрессионных проверок.
-- `reports/`: небольшие отчеты уже выполненных экспериментов.
-- `configs/`: настройки исходного эксперимента.
+- `src/astroclimb/`: object processing, features, models, folds, and input validation.
+- `scripts/`: representation extraction, training, and result analysis.
+- `tests/test_all_regressions.py`: the unified regression suite.
+- `reports/`: compact reports from executed experiments.
+- `configs/`: settings for the original experiment.
 
-## Лицензия и источники
+## License and sources
 
-Код распространяется под MIT, см. `LICENSE`. Данные Kaggle и предварительно обученные модели имеют собственные условия использования.
+The code is distributed under the MIT license; see `LICENSE`. Kaggle data and pretrained models are subject to their own terms of use.
 
 - [AstroCLIMB](https://www.kaggle.com/competitions/astroclimb)
 - [CLIP](https://proceedings.mlr.press/v139/radford21a.html)

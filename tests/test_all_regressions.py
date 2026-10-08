@@ -1,9 +1,9 @@
-"""Регрессионные проверки GRAIL, собранные в одном модуле."""
+"""GRAIL regression checks consolidated in one module."""
 
 from __future__ import annotations
 
 
-# Проверки из embedding_store
+# Checks for embedding_store
 
 import numpy as np
 import pandas as pd
@@ -49,7 +49,7 @@ def test_mixed_pair_uses_joint_and_single_modality_spaces_without_order_leakage(
     assert features.shape[1] == 4 + 2 + 2 + 3 + 3
 
 
-# Проверки из evaluation
+# Checks for evaluation
 
 import numpy as np
 import pytest
@@ -134,7 +134,7 @@ def test_group_bootstrap_rejects_invalid_inputs(
         group_bootstrap_macro_f1_ci(truth, predicted, groups, labels, n_resamples, seed=1)
 
 
-# Проверки из features
+# Checks for features
 
 import numpy as np
 import pandas as pd
@@ -207,7 +207,7 @@ def test_multimodal_ocr_features_are_swap_invariant() -> None:
     assert values[0, 8] > 0
 
 
-# Проверки из graph_refinement
+# Checks for graph_refinement
 
 import numpy as np
 import pandas as pd
@@ -238,7 +238,7 @@ def test_high_confidence_paper_edges_create_conservative_closure() -> None:
     np.testing.assert_allclose(refined.sum(axis=1), 1.0)
 
 
-# Проверки из integrity
+# Checks for integrity
 
 import numpy as np
 import pandas as pd
@@ -262,7 +262,7 @@ def test_one_hot_validation() -> None:
         validate_one_hot(invalid)
 
 
-# Проверки из modeling
+# Checks for modeling
 
 import numpy as np
 
@@ -286,7 +286,7 @@ def test_crossfit_offsets_preserve_rows_and_cover_every_fold() -> None:
     np.testing.assert_allclose(calibrated.sum(axis=1), 1.0)
 
 
-# Проверки из nested_training
+# Checks for nested_training
 
 import importlib.util
 from pathlib import Path
@@ -331,7 +331,7 @@ def test_flat_probability_columns_follow_competition_label_order(monkeypatch):
     np.testing.assert_allclose(result, np.tile([0, 0.7, 0.2, 0.1], (3, 1)))
 
 
-# Проверки из rich_similarity
+# Checks for rich_similarity
 
 import numpy as np
 import pandas as pd
@@ -471,7 +471,7 @@ def test_raw_lengths_and_layout_coordinates_are_symmetric_and_preserved():
     np.testing.assert_array_equal(missing[:, first : first + 5], np.zeros((3, 5)))
 
 
-# Проверки из splits
+# Checks for splits
 
 import pandas as pd
 
@@ -491,7 +491,7 @@ def test_connected_objects_share_group() -> None:
     assert groups[2] != groups[0]
 
 
-# Проверки из visual
+# Checks for visual
 
 import numpy as np
 from PIL import Image
@@ -581,7 +581,7 @@ def test_review_scincl_metric_uses_only_caption_pairs_and_three_labels():
     assert result["rows"] == 1
     assert result["metric_labels"] == ["same_paper", "related_papers", "unrelated_papers"]
     assert result["macro_f1"] == pytest.approx(1 / 3)
-    with pytest.raises(ValueError, match="нормировка"):
+    with pytest.raises(ValueError, match="normalization"):
         runner.evaluate(meta, probability, None)
 
 
@@ -644,7 +644,7 @@ def test_review_runner_evaluates_every_row_once_on_disjoint_saved_folds(tmp_path
     assert all(check["object_overlap"] == 0 for check in report["validation_checks"])
     assert report["test_data_read"] is False
     assert report["decision_offsets"] is False
-    with pytest.raises(FileExistsError, match="существует"):
+    with pytest.raises(FileExistsError, match="already exists"):
         runner.run(args)
 
 
@@ -657,7 +657,7 @@ def test_streaming_rejects_incomplete_object_row(tmp_path):
         "0,1,0,0,0,first\n",
         encoding="utf-8",
     )
-    with pytest.raises(ValueError, match="Неполная строка id=0"):
+    with pytest.raises(ValueError, match="Incomplete row id=0"):
         list(iter_pair_rows(source, labeled=True, max_field_characters=1024))
 
 
@@ -703,7 +703,7 @@ def test_preparation_never_accepts_missing_rows_in_full_scope(tmp_path):
         "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
         "0,0,1,0,0,first,second\n", encoding="utf-8",
     )
-    with pytest.raises(ValueError, match="область неполная"):
+    with pytest.raises(ValueError, match="scope is incomplete"):
         list(runner.validated_rows(source, _preparation_metadata()))
     rows = list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
     assert [row.pair_id for row in rows] == [0]
@@ -718,7 +718,7 @@ def test_preparation_scope_skips_only_unselected_modalities(tmp_path):
         "1,0,1,0,0,iVBORfirst\n", encoding="utf-8",
     )
     assert len(list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))) == 1
-    with pytest.raises(ValueError, match="Неполная строка"):
+    with pytest.raises(ValueError, match="Incomplete row"):
         list(runner.validated_rows(source, _preparation_metadata()))
 
 
@@ -727,10 +727,10 @@ def test_preparation_rejects_changed_objects_and_duplicate_selected_ids(tmp_path
     source = tmp_path / "train.csv"
     header = "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
     source.write_text(header + "0,0,1,0,0,wrong,second\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="не совпадает"):
+    with pytest.raises(ValueError, match="does not match"):
         list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
     source.write_text(header + "0,0,1,0,0,first,second\n" * 2, encoding="utf-8")
-    with pytest.raises(ValueError, match="Повторная выбранная"):
+    with pytest.raises(ValueError, match="Duplicate selected"):
         list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
 
 
@@ -740,3 +740,38 @@ def test_review_image_caption_metric_preserves_all_four_labels():
     report = runner.evaluate(meta, np.asarray([[1, 0, 0, 0]], dtype=np.float32), "image+text")
     assert report["metric_labels"] == list(LABELS)
     assert report["macro_f1"] == pytest.approx(0.25)
+
+
+def _publication_texts():
+    import json
+
+    root = Path(__file__).parents[1]
+    files = [path for path in root.iterdir() if path.is_file()]
+    for directory in ("configs", "reports", "scripts", "src", "tests"):
+        files.extend((root / directory).rglob("*"))
+    for path in sorted(files):
+        if not path.is_file() or path.suffix in {".npy", ".pyc"}:
+            continue
+        if "__pycache__" in path.parts or any(part.endswith(".egg-info") for part in path.parts):
+            continue
+        text = path.read_text(encoding="utf-8")
+        yield str(path.relative_to(root)), text
+        if path.suffix == ".json":
+            yield str(path.relative_to(root)), json.dumps(json.loads(text), ensure_ascii=False)
+
+
+def test_publication_text_contains_no_cyrillic_characters():
+    import re
+
+    pattern = re.compile("[\u0400-\u052f\u2de0-\u2dff\ua640-\ua69f]")
+    violations = [name for name, text in _publication_texts() if pattern.search(name + text)]
+    assert not violations, f"Disallowed characters in publication files: {violations}"
+
+
+def test_publication_text_excludes_prohibited_language_name():
+    prohibited = bytes((114, 117, 115, 115, 105, 97, 110)).decode("ascii")
+    violations = [
+        name for name, text in _publication_texts()
+        if prohibited in (name + text).casefold()
+    ]
+    assert not violations, f"Disallowed term in publication files: {violations}"

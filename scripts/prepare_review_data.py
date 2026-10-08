@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Готовит только обучающие объекты, проверяя строки по сохраненным метаданным."""
+"""Prepare training objects only, validating rows against saved metadata."""
 
 from __future__ import annotations
 
@@ -28,21 +28,21 @@ from astroclimb.streaming import (
 def validated_rows(
     source: Path, metadata: pd.DataFrame, modalities: tuple[str, ...] | None = None
 ) -> Iterator[PairRow]:
-    """Проверяет объекты, порядок и классы каждой строки до использования.
+    """Validate each row's objects, order, and labels before use.
 
     Parameters
     ----------
     source : pathlib.Path
-        Обучающий CSV, который читается построчно.
+        Training CSV to read one row at a time.
     metadata : pandas.DataFrame
-        Метаданные ранее выполненного эксперимента.
+        Metadata from a previously executed experiment.
     modalities : tuple[str, ...] or None
-        Полные группы пар для отдельного сравнения. При None проверяется весь набор.
+        Complete pair modalities for a separate comparison. None selects all rows.
 
     Returns
     -------
     Iterator[PairRow]
-        Проверенные строки без загрузки всего CSV в память.
+        Validated rows without loading the entire CSV into memory.
     """
     count = 0
     fields = (
@@ -52,7 +52,7 @@ def validated_rows(
     bound = int(metadata[["length_1", "length_2"]].max().max()) + 1024
     selected = metadata if modalities is None else metadata[metadata.pair_type.isin(modalities)]
     if selected.empty or selected.id.duplicated().any():
-        raise ValueError("Выбранная область пуста или содержит повторные идентификаторы")
+        raise ValueError("The selected scope is empty or contains duplicate IDs")
     expected_by_id = selected.set_index("id")
     known_ids = set(metadata.id.astype(int))
     seen_ids = set()
@@ -66,25 +66,25 @@ def validated_rows(
             reader = csv.DictReader(handle)
             required = {"id", "obj_1", "obj_2", *LABELS}
             if not required.issubset(reader.fieldnames or []):
-                raise ValueError("В CSV отсутствуют обязательные обучающие столбцы")
+                raise ValueError("The CSV is missing required training columns")
             for raw in reader:
                 pair_id = int(raw["id"])
                 if pair_id not in known_ids:
-                    raise ValueError(f"Неизвестный идентификатор пары: {pair_id}")
+                    raise ValueError(f"Unknown pair ID: {pair_id}")
                 if pair_id not in expected_by_id.index:
                     continue
                 if raw.get("obj_1") is None or raw.get("obj_2") is None:
-                    raise ValueError(f"Неполная выбранная строка id={pair_id}")
+                    raise ValueError(f"Incomplete selected row id={pair_id}")
                 values = [raw[name] for name in LABELS]
                 if any(value not in {"0", "1"} for value in values) or values.count("1") != 1:
-                    raise ValueError(f"Неверная метка выбранной строки id={pair_id}")
+                    raise ValueError(f"Invalid label in selected row id={pair_id}")
                 yield PairRow(pair_id, raw["obj_1"], raw["obj_2"], LABELS[values.index("1")])
 
     for index, row in enumerate(rows()):
         if index >= len(metadata):
-            raise ValueError("CSV содержит больше строк, чем сохраненный набор")
+            raise ValueError("The CSV contains more rows than the saved dataset")
         if row.pair_id in seen_ids:
-            raise ValueError(f"Повторная выбранная строка id={row.pair_id}")
+            raise ValueError(f"Duplicate selected row id={row.pair_id}")
         seen_ids.add(row.pair_id)
         kinds = ["image" if is_image_object(v) else "text" for v in (row.object_1, row.object_2)]
         actual = (
@@ -95,13 +95,13 @@ def validated_rows(
         record = metadata.iloc[index] if modalities is None else expected_by_id.loc[row.pair_id]
         expected = tuple(row.pair_id if name == "id" else record[name] for name in fields)
         if modalities is None and row.pair_id != record["id"]:
-            raise ValueError(f"Неверный порядок строк: id={row.pair_id}")
+            raise ValueError(f"Invalid row order: id={row.pair_id}")
         if actual != expected:
-            raise ValueError(f"Строка {index} не совпадает с сохраненным экспериментом")
+            raise ValueError(f"Row {index} does not match the saved experiment")
         count += 1
         yield row
     if count != len(selected):
-        raise ValueError(f"Выбранная область неполная: прочитано {count} из {len(selected)} строк")
+        raise ValueError(f"The selected scope is incomplete: read {count} of {len(selected)} rows")
 
 
 def prepare(
@@ -112,33 +112,33 @@ def prepare(
     modalities: tuple[str, ...] | None = None,
     fold_ids_path: Path | None = None,
 ) -> dict:
-    """Создает компактный кеш только после проверки соответствующих строк.
+    """Build a compact cache only after validating the corresponding rows.
 
     Parameters
     ----------
     source : pathlib.Path
-        Обучающий CSV; исходный файл не копируется и не изменяется.
+        Training CSV; the source file is neither copied nor modified.
     metadata_path : pathlib.Path
-        Сохраненные метаданные обучения.
+        Saved training metadata.
     root : pathlib.Path
-        Корень проекта для новых вычислений.
+        Project root for the new computations.
     minimum_free_gib : float
-        Нижняя граница свободного места, проверяемая во время обработки.
+        Minimum free disk space checked during processing.
     modalities : tuple[str, ...] or None
-        Полные группы пар; None означает исходные 10 000 пар.
+        Complete pair modalities; None selects the original 10,000 pairs.
     fold_ids_path : pathlib.Path or None
-        Сохраненные разбиения полного набора для точного переноса выбранных строк.
+        Saved full-dataset fold IDs to preserve the selected rows' assignments.
 
     Returns
     -------
     dict
-        Манифест полного кеша с проверкой совпадения всех строк.
+        Completed-cache manifest confirming that every selected row matches.
     """
     cache = root / "artifacts/object_cache"
     cache.mkdir(parents=True, exist_ok=True)
     manifest_path = cache / "manifest.json"
     if manifest_path.exists():
-        raise FileExistsError("Кеш уже существует; автоматическая перезапись запрещена")
+        raise FileExistsError("The cache already exists; automatic overwriting is prohibited")
     assert_disk_budget(cache, minimum_free_gib=minimum_free_gib)
     initial_size = source.stat().st_size
     metadata = pd.read_parquet(metadata_path)
@@ -163,9 +163,9 @@ def prepare(
             if count % 100 == 0:
                 assert_disk_budget(cache, minimum_free_gib=minimum_free_gib)
             if count % 500 == 0:
-                print(f"Проверено {count} пар; изображений {len(image_hashes)}, текстов {len(texts)}", flush=True)
+                print(f"Validated {count} pairs; images {len(image_hashes)}, captions {len(texts)}", flush=True)
         if source.stat().st_size != initial_size:
-            raise ValueError("Размер исходного файла изменился во время чтения")
+            raise ValueError("The source file size changed during reading")
         pd.DataFrame({"hash": list(texts), "text": list(texts.values())}).to_parquet(
             cache / "texts.parquet", index=False,
         )
@@ -179,7 +179,7 @@ def prepare(
         if fold_ids_path is not None:
             full_ids = np.load(assert_safe_input(fold_ids_path))
             if full_ids.shape != (len(metadata),) or set(full_ids.tolist()) != set(range(5)):
-                raise ValueError("Неверные разбиения исходного набора")
+                raise ValueError("Invalid fold assignments for the source dataset")
             np.save(audit / "fold_ids.npy", full_ids[selected.index.to_numpy()])
         manifest = {
             "status": "complete", "pairs": count, "unique_objects": len(seen),

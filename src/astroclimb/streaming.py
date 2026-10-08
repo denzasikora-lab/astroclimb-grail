@@ -50,27 +50,27 @@ class PairRow:
 def iter_pair_rows(
     path: str | Path, *, labeled: bool, max_field_characters: int | None = None
 ) -> Iterator[PairRow]:
-    """Читает пары построчно с необязательной границей размера поля.
+    """Stream pair rows with an optional field-size limit.
 
     Parameters
     ----------
     path : str or pathlib.Path
-        Путь к CSV с объектами пары.
+        Path to the CSV containing paired objects.
     labeled : bool
-        Требуется ли ровно один активный обучающий класс.
+        Whether exactly one active training label is required.
     max_field_characters : int or None
-        Предельная длина поля для защиты памяти при поврежденном CSV.
+        Maximum field length to bound memory use for a damaged CSV.
 
     Returns
     -------
     Iterator[PairRow]
-        Проверенные строки с двумя непустыми объектами.
+        Validated rows containing both object fields.
     """
     source = assert_safe_input(path)
     configure_csv_field_limit()
     if max_field_characters is not None:
         if max_field_characters < 1:
-            raise ValueError("Граница размера поля должна быть положительной")
+            raise ValueError("The field-size limit must be positive")
         csv.field_size_limit(max_field_characters)
     with source.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -89,7 +89,7 @@ def iter_pair_rows(
 
         for raw in reader:
             if raw.get("obj_1") is None or raw.get("obj_2") is None:
-                raise ValueError(f"Неполная строка id={raw.get('id')}: отсутствует объект пары")
+                raise ValueError(f"Incomplete row id={raw.get('id')}: missing paired object")
             label: str | None = None
             if labeled:
                 active = [name for name in LABELS if int(raw[name]) == 1]

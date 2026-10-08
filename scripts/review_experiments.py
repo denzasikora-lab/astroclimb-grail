@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Сравнивает cosine-бейзлайны, CLIP-абляции и варианты OCR на общих разбиениях."""
+"""Compare cosine baselines, CLIP ablations, and OCR variants on shared folds."""
 
 from __future__ import annotations
 
@@ -45,20 +45,20 @@ RUNS = {
 
 
 def cosine_matrix(meta: pd.DataFrame, spaces: list[EncoderSpace]) -> np.ndarray:
-    """Вычисляет косинусные сходства без обучения статистик корпуса.
+    """Compute cosine similarities without fitting corpus statistics.
 
     Parameters
     ----------
     meta : pandas.DataFrame
-        Типы и хеши двух объектов каждой пары.
+        Types and hashes of both objects in each pair.
     spaces : list[EncoderSpace]
-        Пространства замороженных представлений в порядке столбцов результата.
+        Frozen representation spaces in output-column order.
 
     Returns
     -------
     numpy.ndarray
-        Сходства формы (число пар, число пространств). Для недоступного
-        пространства возвращается ноль; классификаторы разделены по модальности.
+        Similarities with shape (number of pairs, number of spaces).
+        Unavailable spaces return zero; classifiers are separated by modality.
     """
     result = np.zeros((len(meta), len(spaces)), dtype=np.float32)
     for column, space in enumerate(spaces):
@@ -79,19 +79,19 @@ def cosine_matrix(meta: pd.DataFrame, spaces: list[EncoderSpace]) -> np.ndarray:
 
 
 def feature_mask(names: list[str], experiment: str) -> np.ndarray:
-    """Выбирает признаки, сохраняя остальные блоки при CLIP-абляции.
+    """Select features while preserving other blocks in a CLIP ablation.
 
     Parameters
     ----------
     names : list[str]
-        Имена признаков полного преобразования.
+        Feature names of the full transformation.
     experiment : str
-        Имя эксперимента rich_full, rich_no_b16 или rich_no_b32.
+        Experiment name: rich_full, rich_no_b16, or rich_no_b32.
 
     Returns
     -------
     numpy.ndarray
-        Булева маска столбцов; удаляется только блок указанного CLIP.
+        Boolean column mask removing only the specified CLIP block.
     """
     prefixes = {"rich_no_b16": "emb.clip_b16_", "rich_no_b32": "emb.clip_b32_"}
     prefix = prefixes.get(experiment)
@@ -102,7 +102,7 @@ def estimator(kind: str):
     if kind == "factorized7":
         return make_estimator(CONFIGS["factorized7"])
     if kind != "logistic":
-        raise ValueError(f"Неизвестный классификатор: {kind}")
+        raise ValueError(f"Unknown classifier: {kind}")
     return make_pipeline(
         StandardScaler(),
         LogisticRegression(
@@ -120,11 +120,11 @@ def evaluate(meta: pd.DataFrame, probability: np.ndarray, scope: str | None) -> 
     )
     actual = probability[selected]
     if actual.shape != (int(selected.sum()), len(LABELS)) or not np.isfinite(actual).all():
-        raise ValueError("Неверная форма или неконечные вероятности")
+        raise ValueError("Invalid shape or non-finite probabilities")
     if (actual < 0).any() or not np.allclose(actual.sum(axis=1), 1, atol=1e-6):
-        raise ValueError("Нарушена нормировка вероятностей")
+        raise ValueError("Invalid probability normalization")
     if (actual[meta.loc[selected, "pair_type"].to_numpy() != "image+text", 0] != 0).any():
-        raise ValueError("Предсказан невозможный класс same_figure")
+        raise ValueError("Predicted an infeasible same_figure class")
     labels = list(LABELS if scope in (None, "image+text") else LABELS[1:])
     truth = meta.loc[selected, "label"].astype(str).to_numpy()
     prediction = np.asarray(LABELS)[actual.argmax(axis=1)]
@@ -147,11 +147,11 @@ def run(args: argparse.Namespace) -> None:
     truth = meta["label"].astype(str).to_numpy()
     active_modalities = [kind for kind in PAIR_TYPES if kind in set(meta.pair_type)]
     if not active_modalities or not meta.pair_type.isin(PAIR_TYPES).all():
-        raise ValueError("Неверная или пустая область модальностей")
+        raise ValueError("Invalid or empty modality scope")
     if args.fold_ids is not None:
         ids = np.load(assert_safe_input(args.fold_ids))
         if ids.shape != (len(meta),) or set(ids.tolist()) != set(range(5)):
-            raise ValueError("Сохраненные разбиения не соответствуют пяти внешним частям")
+            raise ValueError("Saved fold assignments do not match five outer folds")
         folds = [(np.flatnonzero(ids != fold), np.flatnonzero(ids == fold)) for fold in range(5)]
     else:
         folds = list(component_stratified_folds(meta, n_splits=5))
@@ -191,10 +191,10 @@ def run(args: argparse.Namespace) -> None:
         ocr = load_ocr_jsonl(args.ocr_jsonl or root / "artifacts/ocr_fast.jsonl")
     if "rich_full_resolution_ocr" in args.runs:
         if args.full_resolution_ocr is None:
-            raise ValueError("Для сравнения разрешений требуется --full-resolution-ocr")
+            raise ValueError("Resolution comparison requires --full-resolution-ocr")
         full_ocr = load_ocr_jsonl(args.full_resolution_ocr)
         if set(full_ocr) != set(ocr):
-            raise ValueError("Два OCR-кеша должны покрывать одинаковые хеши изображений")
+            raise ValueError("Both OCR caches must cover the same image hashes")
     cosine = {
         name: cosine_matrix(meta, [spaces[s] for s in config[1]])
         for name, config in RUNS.items()
@@ -203,7 +203,7 @@ def run(args: argparse.Namespace) -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for name in args.runs:
         if (args.output_dir / name / "cv_report.json").exists():
-            raise FileExistsError(f"Завершенный эксперимент уже существует: {name}")
+            raise FileExistsError(f"A completed experiment already exists: {name}")
     input_fingerprint = hashlib.sha256(
         pd.util.hash_pandas_object(
             meta[["hash_1", "hash_2", "label"]],
@@ -222,7 +222,7 @@ def run(args: argparse.Namespace) -> None:
             rich = RichSimilarityFeatures(texts, ocr, list(spaces.values())).fit(fitting)
             x_fit, x_valid = rich.transform(fitting), rich.transform(heldout)
             if len(rich.feature_names) != 190:
-                raise ValueError("Полная модель должна иметь ровно 190 признаков")
+                raise ValueError("The full model must have exactly 190 features")
         high = None
         if full_ocr is not None:
             high = RichSimilarityFeatures(texts, full_ocr, list(spaces.values())).fit(fitting)
@@ -245,7 +245,7 @@ def run(args: argparse.Namespace) -> None:
                 train_mask = fitting["pair_type"].to_numpy() == modality
                 valid_mask = heldout["pair_type"].to_numpy() == modality
                 if not train_mask.any() or not valid_mask.any():
-                    raise ValueError(f"В разбиении отсутствует модальность {modality}")
+                    raise ValueError(f"The fold is missing modality {modality}")
                 model = FactorizedRelationModel.fit(
                     local_fit[train_mask],
                     truth[fit[train_mask]],
@@ -283,11 +283,11 @@ def run(args: argparse.Namespace) -> None:
             "folds": details[name],
             "validation_checks": validation,
             "input_fingerprint": input_fingerprint,
-            "corpus_statistics": "Только уникальные объекты обучающей части каждого разбиения",
+            "corpus_statistics": "Unique objects from the fitting partition of each fold only",
             "decision_offsets": False,
             "model_selection": False,
             "test_data_read": False,
-            "interpretation": "Оценка разработки после предшествующих экспериментов на том же наборе",
+            "interpretation": "Development estimate after prior experiments on the same dataset",
             "elapsed_total_seconds": time.monotonic() - started,
             "included_pair_types": active_modalities,
             "per_modality": {
@@ -327,7 +327,7 @@ def main() -> None:
     parser.add_argument("--threads", type=int, default=2)
     args = parser.parse_args()
     if args.threads < 1:
-        parser.error("--threads должен быть положительным")
+        parser.error("--threads must be positive")
     if args.full_resolution_ocr is not None and "rich_full_resolution_ocr" not in args.runs:
         args.runs.append("rich_full_resolution_ocr")
     with threadpool_limits(limits=args.threads):

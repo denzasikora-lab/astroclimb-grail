@@ -15,5 +15,5 @@
   "image_decode_failures": 0,
   "test_data_read": false,
   "raw_csv_copied": false,
-  "description": "Полная сверка повторно скачанного обучающего файла с сохраненными метаданными исходного эксперимента."
+  "description": "Complete verification of the replacement training file against the saved metadata of the original experiment."
 }

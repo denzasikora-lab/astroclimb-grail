@@ -185,5 +185,5 @@
   },
   "fold_ids_sha256": "3822d6ef57ef454ac86cdc2cb008964e16c2161bde34f61f737dab8a24b54e37",
   "review_runner_sha256": "59e66926bffed419b0d5a819bce2d8bed4f945830fb90368477758d677cd99ab",
-  "description": "Измеренные camera-ready сравнения на полном наборе, с теми же внешними разбиениями и контролируемыми классификаторами."
+  "description": "Measured camera-ready comparisons on the full dataset, using the same outer folds and controlled classifiers."
 }
