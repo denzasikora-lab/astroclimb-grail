@@ -1,0 +1,19 @@
+{
+  "status": "complete",
+  "source_name": "train.csv",
+  "source_bytes": 10096854159,
+  "expected_source_bytes": 10096854159,
+  "verified_pairs": 10000,
+  "pair_order_match": true,
+  "object_hashes_match": true,
+  "object_types_match": true,
+  "object_lengths_match": true,
+  "labels_match": true,
+  "source_unchanged_during_verification": true,
+  "unique_images": 9341,
+  "unique_captions": 9325,
+  "image_decode_failures": 0,
+  "test_data_read": false,
+  "raw_csv_copied": false,
+  "description": "Полная сверка повторно скачанного обучающего файла с сохраненными метаданными исходного эксперимента."
+}

@@ -11,6 +11,7 @@ __pycache__/
 /checkpoints/
 /artifacts/
 *.npy
+!/reports/review_experiments/**/oof_probabilities.npy
 *.npz
 *.safetensors
 *.ckpt

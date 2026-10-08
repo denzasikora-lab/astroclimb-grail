@@ -1,0 +1,466 @@
+{
+  "scope": "all_modalities",
+  "rows": 10000,
+  "metric_labels": [
+    "same_figure",
+    "same_paper",
+    "related_papers",
+    "unrelated_papers"
+  ],
+  "macro_f1": 0.40436163453991936,
+  "classification_report": {
+    "same_figure": {
+      "precision": 0.4190093708165997,
+      "recall": 0.626,
+      "f1-score": 0.5020048115477145,
+      "support": 1000.0
+    },
+    "same_paper": {
+      "precision": 0.4110032362459547,
+      "recall": 0.4656666666666667,
+      "f1-score": 0.43663072355055477,
+      "support": 3000.0
+    },
+    "related_papers": {
+      "precision": 0.3522727272727273,
+      "recall": 0.155,
+      "f1-score": 0.2152777777777778,
+      "support": 3000.0
+    },
+    "unrelated_papers": {
+      "precision": 0.4153683654607869,
+      "recall": 0.5243333333333333,
+      "f1-score": 0.46353322528363045,
+      "support": 3000.0
+    },
+    "accuracy": 0.4061,
+    "macro avg": {
+      "precision": 0.39941342494901716,
+      "recall": 0.44275000000000003,
+      "f1-score": 0.40436163453991936,
+      "support": 10000.0
+    },
+    "weighted avg": {
+      "precision": 0.3954942357755006,
+      "recall": 0.4061,
+      "f1-score": 0.38483299913836033,
+      "support": 10000.0
+    }
+  },
+  "experiment": "cosine_b16_logistic",
+  "estimator": "logistic",
+  "folds": [
+    {
+      "fold": 0,
+      "macro_f1": 0.39901515283118216,
+      "features": [
+        "cosine.clip_b16"
+      ]
+    },
+    {
+      "fold": 1,
+      "macro_f1": 0.4227814646086613,
+      "features": [
+        "cosine.clip_b16"
+      ]
+    },
+    {
+      "fold": 2,
+      "macro_f1": 0.41370583440671965,
+      "features": [
+        "cosine.clip_b16"
+      ]
+    },
+    {
+      "fold": 3,
+      "macro_f1": 0.3772821051603198,
+      "features": [
+        "cosine.clip_b16"
+      ]
+    },
+    {
+      "fold": 4,
+      "macro_f1": 0.40913497099475726,
+      "features": [
+        "cosine.clip_b16"
+      ]
+    }
+  ],
+  "validation_checks": [
+    {
+      "fold": 0,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 1,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 2,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 3,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    },
+    {
+      "fold": 4,
+      "train_rows": 8000,
+      "valid_rows": 2000,
+      "valid_label_counts": {
+        "same_figure": 200,
+        "same_paper": 600,
+        "related_papers": 600,
+        "unrelated_papers": 600
+      },
+      "object_overlap": 0
+    }
+  ],
+  "input_fingerprint": "7a3bf70ed79ed516f7beee054d2fc7ada5fc4a85f9209610bcde6a1f4add5685",
+  "corpus_statistics": "Только уникальные объекты обучающей части каждого разбиения",
+  "decision_offsets": false,
+  "model_selection": false,
+  "test_data_read": false,
+  "interpretation": "Оценка разработки после предшествующих экспериментов на том же наборе",
+  "elapsed_total_seconds": 59.35768716596067,
+  "included_pair_types": [
+    "image+text",
+    "text+text",
+    "image+image"
+  ],
+  "per_modality": {
+    "image+text": {
+      "scope": "image+text",
+      "rows": 4000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "macro_f1": 0.3202763316632057,
+      "classification_report": {
+        "same_figure": {
+          "precision": 0.4190093708165997,
+          "recall": 0.626,
+          "f1-score": 0.5020048115477145,
+          "support": 1000.0
+        },
+        "same_paper": {
+          "precision": 0.23887240356083086,
+          "recall": 0.161,
+          "f1-score": 0.1923536439665472,
+          "support": 1000.0
+        },
+        "related_papers": {
+          "precision": 0.2802056555269923,
+          "recall": 0.109,
+          "f1-score": 0.15694744420446363,
+          "support": 1000.0
+        },
+        "unrelated_papers": {
+          "precision": 0.36382536382536385,
+          "recall": 0.525,
+          "f1-score": 0.4297994269340974,
+          "support": 1000.0
+        },
+        "accuracy": 0.35525,
+        "macro avg": {
+          "precision": 0.3254781984324467,
+          "recall": 0.35525,
+          "f1-score": 0.3202763316632057,
+          "support": 4000.0
+        },
+        "weighted avg": {
+          "precision": 0.3254781984324467,
+          "recall": 0.35525,
+          "f1-score": 0.3202763316632057,
+          "support": 4000.0
+        }
+      }
+    },
+    "text+text": {
+      "scope": "text+text",
+      "rows": 3000,
+      "metric_labels": [
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "macro_f1": 0.4421076840074127,
+      "classification_report": {
+        "same_paper": {
+          "precision": 0.48044692737430167,
+          "recall": 0.602,
+          "f1-score": 0.534398579671549,
+          "support": 1000.0
+        },
+        "related_papers": {
+          "precision": 0.3887884267631103,
+          "recall": 0.215,
+          "f1-score": 0.2768834513844173,
+          "support": 1000.0
+        },
+        "unrelated_papers": {
+          "precision": 0.4731993299832496,
+          "recall": 0.565,
+          "f1-score": 0.5150410209662717,
+          "support": 1000.0
+        },
+        "accuracy": 0.46066666666666667,
+        "macro avg": {
+          "precision": 0.4474782280402205,
+          "recall": 0.4606666666666666,
+          "f1-score": 0.4421076840074127,
+          "support": 3000.0
+        },
+        "weighted avg": {
+          "precision": 0.4474782280402205,
+          "recall": 0.46066666666666667,
+          "f1-score": 0.4421076840074127,
+          "support": 3000.0
+        }
+      }
+    },
+    "image+image": {
+      "scope": "image+image",
+      "rows": 3000,
+      "metric_labels": [
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "macro_f1": 0.3889639071972492,
+      "classification_report": {
+        "same_paper": {
+          "precision": 0.43070652173913043,
+          "recall": 0.634,
+          "f1-score": 0.5129449838187702,
+          "support": 1000.0
+        },
+        "related_papers": {
+          "precision": 0.373015873015873,
+          "recall": 0.141,
+          "f1-score": 0.204644412191582,
+          "support": 1000.0
+        },
+        "unrelated_papers": {
+          "precision": 0.42,
+          "recall": 0.483,
+          "f1-score": 0.4493023255813953,
+          "support": 1000.0
+        },
+        "accuracy": 0.41933333333333334,
+        "macro avg": {
+          "precision": 0.40790746491833446,
+          "recall": 0.41933333333333334,
+          "f1-score": 0.3889639071972492,
+          "support": 3000.0
+        },
+        "weighted avg": {
+          "precision": 0.4079074649183345,
+          "recall": 0.41933333333333334,
+          "f1-score": 0.38896390719724916,
+          "support": 3000.0
+        }
+      }
+    }
+  },
+  "fold_ids_sha256": "3822d6ef57ef454ac86cdc2cb008964e16c2161bde34f61f737dab8a24b54e37",
+  "embedding_sha256": {
+    "emb_clip_b16_image.npy": "d49a1a9a6ec56c6f4c2c6013cc45fa03eb14e49affd7b6add7f45a02805bcbfe",
+    "emb_clip_b16_text.npy": "f6a60a32c3989ba148adff58b412b5b3023aa1eb07e008a12910f735e9eb858b",
+    "emb_clip_b32_image.npy": "eb6163d0b92fe3fff4e0bcc3084e24689a5ea11d9d8824eaa8575b78d665fdf7",
+    "emb_clip_b32_text.npy": "ea9acddd167c8a1c4709cabd32d1a4f511495f736cd7eff53bb35eb47162835e",
+    "emb_layout_image.npy": "c925ccd86f7765dcfda0623eff51170234e4657368caa308f943b7b00aa8cb6e",
+    "emb_scincl_text.npy": "c4ab6a3dcfe3184b533bcf160a36d2a15e929910b9ed1ebebcb5628529405aa9"
+  },
+  "embedding_provenance": {
+    "clip_b16": {
+      "kind": "joint",
+      "name": "clip_b16",
+      "model": "openai/clip-vit-base-patch16",
+      "requested_revision": "57c216476eefef5ab752ec549e440a49ae4ae5f3",
+      "device": "mps",
+      "pooling": "cls",
+      "image_preprocess": "letterbox",
+      "processor_backend": "transformers",
+      "max_length": 77,
+      "created_at_utc": "2026-10-08T14:56:08.018038+00:00",
+      "torch_version": "2.11.0",
+      "transformers_version": "5.4.0",
+      "model_commit": "57c216476eefef5ab752ec549e440a49ae4ae5f3",
+      "cache_manifest": {
+        "elapsed_seconds": 285.9916017090436,
+        "full_dataset_complete": true,
+        "image_failures": [],
+        "image_side": 384,
+        "images": 9341,
+        "jpeg_quality": 88,
+        "pairs": 10000,
+        "saved_metadata_exact_match": true,
+        "scope_complete": true,
+        "selected_pair_types": [
+          "image+image",
+          "image+text",
+          "text+text"
+        ],
+        "source_bytes": 10096854159,
+        "source_pairs": 10000,
+        "status": "complete",
+        "test_data_read": false,
+        "texts": 9325,
+        "unique_objects": 18666
+      },
+      "text_mapping_sha256": "2a37914ed6d26f51266ec43d6c8be8de1a52963eec8182045dd2087eb061d0d9",
+      "text_shape": [
+        9325,
+        512
+      ],
+      "image_mapping_sha256": "0389f970a02ce8a25c532c5bdce5d0d98772e466c77d8c21d3c76a62af824f61",
+      "image_shape": [
+        9341,
+        512
+      ],
+      "elapsed_seconds": 280.37
+    },
+    "clip_b32": {
+      "kind": "joint",
+      "name": "clip_b32",
+      "model": "openai/clip-vit-base-patch32",
+      "requested_revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+      "device": "mps",
+      "pooling": "cls",
+      "image_preprocess": "letterbox",
+      "processor_backend": "transformers",
+      "max_length": 77,
+      "created_at_utc": "2026-10-08T15:01:22.273635+00:00",
+      "torch_version": "2.11.0",
+      "transformers_version": "5.4.0",
+      "model_commit": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+      "cache_manifest": {
+        "elapsed_seconds": 285.9916017090436,
+        "full_dataset_complete": true,
+        "image_failures": [],
+        "image_side": 384,
+        "images": 9341,
+        "jpeg_quality": 88,
+        "pairs": 10000,
+        "saved_metadata_exact_match": true,
+        "scope_complete": true,
+        "selected_pair_types": [
+          "image+image",
+          "image+text",
+          "text+text"
+        ],
+        "source_bytes": 10096854159,
+        "source_pairs": 10000,
+        "status": "complete",
+        "test_data_read": false,
+        "texts": 9325,
+        "unique_objects": 18666
+      },
+      "text_mapping_sha256": "2a37914ed6d26f51266ec43d6c8be8de1a52963eec8182045dd2087eb061d0d9",
+      "text_shape": [
+        9325,
+        512
+      ],
+      "image_mapping_sha256": "0389f970a02ce8a25c532c5bdce5d0d98772e466c77d8c21d3c76a62af824f61",
+      "image_shape": [
+        9341,
+        512
+      ],
+      "elapsed_seconds": 117.361
+    },
+    "scincl": {
+      "kind": "text",
+      "name": "scincl",
+      "model": "malteos/scincl",
+      "requested_revision": "ebc5348d184ba2fc9beee69b4e394263fce57b2e",
+      "device": "mps",
+      "pooling": "cls",
+      "image_preprocess": "native",
+      "processor_backend": "transformers",
+      "max_length": 512,
+      "created_at_utc": "2026-10-08T15:03:46.265269+00:00",
+      "torch_version": "2.11.0",
+      "transformers_version": "5.4.0",
+      "model_commit": "ebc5348d184ba2fc9beee69b4e394263fce57b2e",
+      "cache_manifest": {
+        "elapsed_seconds": 285.9916017090436,
+        "full_dataset_complete": true,
+        "image_failures": [],
+        "image_side": 384,
+        "images": 9341,
+        "jpeg_quality": 88,
+        "pairs": 10000,
+        "saved_metadata_exact_match": true,
+        "scope_complete": true,
+        "selected_pair_types": [
+          "image+image",
+          "image+text",
+          "text+text"
+        ],
+        "source_bytes": 10096854159,
+        "source_pairs": 10000,
+        "status": "complete",
+        "test_data_read": false,
+        "texts": 9325,
+        "unique_objects": 18666
+      },
+      "text_mapping_sha256": "2a37914ed6d26f51266ec43d6c8be8de1a52963eec8182045dd2087eb061d0d9",
+      "text_shape": [
+        9325,
+        768
+      ],
+      "elapsed_seconds": 410.256
+    },
+    "layout": {
+      "name": "layout",
+      "kind": "deterministic_layout_descriptor",
+      "shape": [
+        9341,
+        33
+      ],
+      "elapsed_seconds": 36.189
+    }
+  },
+  "environment": {
+    "python": "3.14.3",
+    "numpy": "2.4.3",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.0"
+  }
+}

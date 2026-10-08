@@ -47,9 +47,31 @@ class PairRow:
     label: str | None
 
 
-def iter_pair_rows(path: str | Path, *, labeled: bool) -> Iterator[PairRow]:
+def iter_pair_rows(
+    path: str | Path, *, labeled: bool, max_field_characters: int | None = None
+) -> Iterator[PairRow]:
+    """Читает пары построчно с необязательной границей размера поля.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Путь к CSV с объектами пары.
+    labeled : bool
+        Требуется ли ровно один активный обучающий класс.
+    max_field_characters : int or None
+        Предельная длина поля для защиты памяти при поврежденном CSV.
+
+    Returns
+    -------
+    Iterator[PairRow]
+        Проверенные строки с двумя непустыми объектами.
+    """
     source = assert_safe_input(path)
     configure_csv_field_limit()
+    if max_field_characters is not None:
+        if max_field_characters < 1:
+            raise ValueError("Граница размера поля должна быть положительной")
+        csv.field_size_limit(max_field_characters)
     with source.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         if reader.fieldnames is None:
@@ -66,6 +88,8 @@ def iter_pair_rows(path: str | Path, *, labeled: bool) -> Iterator[PairRow]:
             assert_no_test_targets(reader.fieldnames)
 
         for raw in reader:
+            if raw.get("obj_1") is None or raw.get("obj_2") is None:
+                raise ValueError(f"Неполная строка id={raw.get('id')}: отсутствует объект пары")
             label: str | None = None
             if labeled:
                 active = [name for name in LABELS if int(raw[name]) == 1]

@@ -1,0 +1,100 @@
+{
+  "cosine_b16_logistic": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.40436163453991936
+  },
+  "cosine_b32_logistic": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.39015606826978516
+  },
+  "cosine_scincl_logistic": {
+    "scope": "text+text",
+    "rows": 3000,
+    "metric_labels": [
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.5005191353461647
+  },
+  "cosine_b16_scincl_logistic": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.42431987411173744
+  },
+  "cosine_dual_scincl_logistic": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.4213300629500961
+  },
+  "cosine_dual_scincl_factorized7": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.4122303739495376
+  },
+  "rich_full": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.48040338681946193
+  },
+  "rich_no_b16": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.4707724840403833
+  },
+  "rich_no_b32": {
+    "scope": "all_modalities",
+    "rows": 10000,
+    "metric_labels": [
+      "same_figure",
+      "same_paper",
+      "related_papers",
+      "unrelated_papers"
+    ],
+    "macro_f1": 0.4728006210493283
+  }
+}

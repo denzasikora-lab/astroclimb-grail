@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
+import platform
 import time
 from pathlib import Path
 
@@ -123,7 +125,7 @@ def evaluate(meta: pd.DataFrame, probability: np.ndarray, scope: str | None) -> 
         raise ValueError("Нарушена нормировка вероятностей")
     if (actual[meta.loc[selected, "pair_type"].to_numpy() != "image+text", 0] != 0).any():
         raise ValueError("Предсказан невозможный класс same_figure")
-    labels = list(LABELS if scope is None else LABELS[1:])
+    labels = list(LABELS if scope in (None, "image+text") else LABELS[1:])
     truth = meta.loc[selected, "label"].astype(str).to_numpy()
     prediction = np.asarray(LABELS)[actual.argmax(axis=1)]
     return {
@@ -143,6 +145,9 @@ def run(args: argparse.Namespace) -> None:
     root = args.project.resolve()
     meta = pd.read_parquet(root / "artifacts/audit/meta_train.parquet")
     truth = meta["label"].astype(str).to_numpy()
+    active_modalities = [kind for kind in PAIR_TYPES if kind in set(meta.pair_type)]
+    if not active_modalities or not meta.pair_type.isin(PAIR_TYPES).all():
+        raise ValueError("Неверная или пустая область модальностей")
     if args.fold_ids is not None:
         ids = np.load(assert_safe_input(args.fold_ids))
         if ids.shape != (len(meta),) or set(ids.tolist()) != set(range(5)):
@@ -151,6 +156,9 @@ def run(args: argparse.Namespace) -> None:
     else:
         folds = list(component_stratified_folds(meta, n_splits=5))
     validation = validate_disjoint_folds(meta, folds)
+    fold_vector = np.empty(len(meta), dtype=np.int16)
+    for fold, (_, valid) in enumerate(folds):
+        fold_vector[valid] = fold
     rich_runs = [name for name in args.runs if name.startswith("rich_")]
     needed = (
         ("clip_b16", "clip_b32", "scincl", "layout")
@@ -158,6 +166,24 @@ def run(args: argparse.Namespace) -> None:
         else sorted({space for name in args.runs for space in RUNS[name][1]})
     )
     spaces = {name: EncoderSpace.load(root / "artifacts/embeddings", name) for name in needed}
+    embedding_hashes = {}
+    for path in sorted((root / "artifacts/embeddings").glob("*.npy")):
+        if not any(path.name.startswith(f"emb_{name}_") for name in needed):
+            continue
+        digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        embedding_hashes[path.name] = digest.hexdigest()
+    environment = {
+        "python": platform.python_version(),
+        **{name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn")},
+    }
+    provenance = {}
+    for name in needed:
+        path = root / "artifacts/embeddings" / f"provenance_{name}.json"
+        if path.exists():
+            provenance[name] = json.loads(path.read_text(encoding="utf-8"))
     texts, ocr, full_ocr = {}, {}, None
     if rich_runs:
         frame = pd.read_parquet(root / "artifacts/object_cache/texts.parquet")
@@ -213,7 +239,7 @@ def run(args: argparse.Namespace) -> None:
                 mask = feature_mask(rich.feature_names, name)
                 local_fit, local_valid = x_fit[:, mask], x_valid[:, mask]
                 feature_names = [n for n, keep in zip(rich.feature_names, mask) if keep]
-            for modality in PAIR_TYPES:
+            for modality in active_modalities:
                 if scope is not None and modality != scope:
                     continue
                 train_mask = fitting["pair_type"].to_numpy() == modality
@@ -263,6 +289,16 @@ def run(args: argparse.Namespace) -> None:
             "test_data_read": False,
             "interpretation": "Оценка разработки после предшествующих экспериментов на том же наборе",
             "elapsed_total_seconds": time.monotonic() - started,
+            "included_pair_types": active_modalities,
+            "per_modality": {
+                modality: evaluate(meta, output[name], modality)
+                for modality in active_modalities
+                if RUNS[name][2] in (None, modality)
+            },
+            "fold_ids_sha256": hashlib.sha256(fold_vector.tobytes()).hexdigest(),
+            "embedding_sha256": embedding_hashes,
+            "embedding_provenance": provenance,
+            "environment": environment,
         }
         np.save(directory / "oof_probabilities.npy", output[name])
         (directory / "cv_report.json").write_text(

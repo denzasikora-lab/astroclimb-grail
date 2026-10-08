@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-08",
+  "verified_training_pairs": 10000,
+  "original_fixed_macro_f1": 0.480180699964353,
+  "original_submission_results_unchanged": true,
+  "test_data_read": false,
+  "model_selection": false,
+  "decision_offsets": false,
+  "outer_folds": 5,
+  "runs": {
+    "cosine_b16_logistic": {
+      "macro_f1": 0.40436163453991936,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.3202763316632057,
+        "text+text": 0.4421076840074127,
+        "image+image": 0.3889639071972492
+      },
+      "feature_count": 1,
+      "oof_sha256": "e6eb9a8a30b153f5a8c72952870d1d6620291c8e83bed8dcc467c0d615c5f3ea",
+      "report": "reports/review_experiments/cosine_b16_logistic/cv_report.json"
+    },
+    "cosine_b16_scincl_logistic": {
+      "macro_f1": 0.42431987411173744,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.3202763316632057,
+        "text+text": 0.5180444779322845,
+        "image+image": 0.3889639071972492
+      },
+      "feature_count": 2,
+      "oof_sha256": "e29973189a5d0f27b47d76906000aaeb2523bc97c05598740f23ef3a4043bb41",
+      "report": "reports/review_experiments/cosine_b16_scincl_logistic/cv_report.json"
+    },
+    "cosine_b32_logistic": {
+      "macro_f1": 0.39015606826978516,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.3106676358604535,
+        "text+text": 0.4274875265360296,
+        "image+image": 0.3723870145771265
+      },
+      "feature_count": 1,
+      "oof_sha256": "f46fde3532ea73fa24c035b415afaca0565d1189527624cb48499d88b8ff49dc",
+      "report": "reports/review_experiments/cosine_b32_logistic/cv_report.json"
+    },
+    "cosine_dual_scincl_factorized7": {
+      "macro_f1": 0.4122303739495376,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.32002002664933404,
+        "text+text": 0.5021579495233875,
+        "image+image": 0.376709462870597
+      },
+      "feature_count": 3,
+      "oof_sha256": "c14dae17b46998fdd57fbf70f90bde2bfa9d0c7113ec8d5fe1ea763f50385bab",
+      "report": "reports/review_experiments/cosine_dual_scincl_factorized7/cv_report.json"
+    },
+    "cosine_dual_scincl_logistic": {
+      "macro_f1": 0.4213300629500961,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.3134012106739458,
+        "text+text": 0.516619990236135,
+        "image+image": 0.38661716078109504
+      },
+      "feature_count": 3,
+      "oof_sha256": "8f0a782590fe04efde24c781cc2a82f55ad13d54a0b17f3d6aff1b9992e24f8a",
+      "report": "reports/review_experiments/cosine_dual_scincl_logistic/cv_report.json"
+    },
+    "cosine_scincl_logistic": {
+      "macro_f1": 0.5005191353461647,
+      "scope": "text+text",
+      "rows": 3000,
+      "metric_labels": [
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "text+text": 0.5005191353461647
+      },
+      "feature_count": 1,
+      "oof_sha256": "01de309f01bf5f5e31643f51c895d9ea77f589db0e577df6fafc818355d1daa9",
+      "report": "reports/review_experiments/cosine_scincl_logistic/cv_report.json"
+    },
+    "rich_full": {
+      "macro_f1": 0.48040338681946193,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.3528104396979631,
+        "text+text": 0.6323435376034009,
+        "image+image": 0.4673429530985171
+      },
+      "feature_count": 190,
+      "oof_sha256": "ea416b32955f1015842e5964c9cb65590b1331265ed9114f15614a2cb9780462",
+      "report": "reports/review_experiments/rich_full/cv_report.json"
+    },
+    "rich_no_b16": {
+      "macro_f1": 0.4707724840403833,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.35350516240927576,
+        "text+text": 0.6378654765883969,
+        "image+image": 0.43621259352985814
+      },
+      "feature_count": 173,
+      "oof_sha256": "3dfc00f30f5032b26f41a910172d5e37f3434978fd479ead6e880ca0d1e3b34b",
+      "report": "reports/review_experiments/rich_no_b16/cv_report.json"
+    },
+    "rich_no_b32": {
+      "macro_f1": 0.4728006210493283,
+      "scope": "all_modalities",
+      "rows": 10000,
+      "metric_labels": [
+        "same_figure",
+        "same_paper",
+        "related_papers",
+        "unrelated_papers"
+      ],
+      "per_modality_macro_f1": {
+        "image+text": 0.35220847802238753,
+        "text+text": 0.6306378157446044,
+        "image+image": 0.4476320989433542
+      },
+      "feature_count": 173,
+      "oof_sha256": "90785d2868decea2abe0f141a0f75e52e001ea97affa775fd5a86cc8a2f2313e",
+      "report": "reports/review_experiments/rich_no_b32/cv_report.json"
+    }
+  },
+  "differences": {
+    "full_minus_matched_cosine": 0.06817301286992433,
+    "without_b16_drop": 0.009630902779078632,
+    "without_b32_drop": 0.007602765770133635,
+    "replay_minus_original": 0.00022268685510895558
+  },
+  "fold_ids_sha256": "3822d6ef57ef454ac86cdc2cb008964e16c2161bde34f61f737dab8a24b54e37",
+  "review_runner_sha256": "59e66926bffed419b0d5a819bce2d8bed4f945830fb90368477758d677cd99ab",
+  "description": "Измеренные camera-ready сравнения на полном наборе, с теми же внешними разбиениями и контролируемыми классификаторами."
+}

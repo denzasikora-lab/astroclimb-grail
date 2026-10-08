@@ -646,3 +646,97 @@ def test_review_runner_evaluates_every_row_once_on_disjoint_saved_folds(tmp_path
     assert report["decision_offsets"] is False
     with pytest.raises(FileExistsError, match="существует"):
         runner.run(args)
+
+
+def test_streaming_rejects_incomplete_object_row(tmp_path):
+    from astroclimb.streaming import iter_pair_rows
+
+    source = tmp_path / "train.csv"
+    source.write_text(
+        "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
+        "0,1,0,0,0,first\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="Неполная строка id=0"):
+        list(iter_pair_rows(source, labeled=True, max_field_characters=1024))
+
+
+def test_streaming_bounds_csv_field_memory(tmp_path):
+    import csv
+    from astroclimb.streaming import iter_pair_rows
+
+    source = tmp_path / "train.csv"
+    source.write_text(
+        "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
+        "0,1,0,0,0," + "a" * 200 + ",second\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(csv.Error, match="field larger"):
+        list(iter_pair_rows(source, labeled=True, max_field_characters=100))
+
+
+def _load_prepare_runner():
+    path = Path(__file__).parents[1] / "scripts" / "prepare_review_data.py"
+    spec = importlib.util.spec_from_file_location("prepare_review_data", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _preparation_metadata():
+    from astroclimb.streaming import object_digest
+
+    return pd.DataFrame([
+        dict(id=0, type_1="text", type_2="text", pair_type="text+text",
+             hash_1=object_digest("first"), hash_2=object_digest("second"),
+             length_1=5, length_2=6, label="same_paper"),
+        dict(id=1, type_1="image", type_2="image", pair_type="image+image",
+             hash_1=object_digest("iVBORfirst"), hash_2=object_digest("iVBORsecond"),
+             length_1=10, length_2=11, label="same_paper"),
+    ])
+
+
+def test_preparation_never_accepts_missing_rows_in_full_scope(tmp_path):
+    runner = _load_prepare_runner()
+    source = tmp_path / "train.csv"
+    source.write_text(
+        "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
+        "0,0,1,0,0,first,second\n", encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="область неполная"):
+        list(runner.validated_rows(source, _preparation_metadata()))
+    rows = list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
+    assert [row.pair_id for row in rows] == [0]
+
+
+def test_preparation_scope_skips_only_unselected_modalities(tmp_path):
+    runner = _load_prepare_runner()
+    source = tmp_path / "train.csv"
+    source.write_text(
+        "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
+        "0,0,1,0,0,first,second\n"
+        "1,0,1,0,0,iVBORfirst\n", encoding="utf-8",
+    )
+    assert len(list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))) == 1
+    with pytest.raises(ValueError, match="Неполная строка"):
+        list(runner.validated_rows(source, _preparation_metadata()))
+
+
+def test_preparation_rejects_changed_objects_and_duplicate_selected_ids(tmp_path):
+    runner = _load_prepare_runner()
+    source = tmp_path / "train.csv"
+    header = "id,same_figure,same_paper,related_papers,unrelated_papers,obj_1,obj_2\n"
+    source.write_text(header + "0,0,1,0,0,wrong,second\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="не совпадает"):
+        list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
+    source.write_text(header + "0,0,1,0,0,first,second\n" * 2, encoding="utf-8")
+    with pytest.raises(ValueError, match="Повторная выбранная"):
+        list(runner.validated_rows(source, _preparation_metadata(), ("text+text",)))
+
+
+def test_review_image_caption_metric_preserves_all_four_labels():
+    runner = _load_review_runner()
+    meta = pd.DataFrame({"pair_type": ["image+text"], "label": ["same_figure"]})
+    report = runner.evaluate(meta, np.asarray([[1, 0, 0, 0]], dtype=np.float32), "image+text")
+    assert report["metric_labels"] == list(LABELS)
+    assert report["macro_f1"] == pytest.approx(0.25)
